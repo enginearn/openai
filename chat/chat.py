@@ -72,7 +72,8 @@ while True:
     conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     if question in ["q", "exit"]:
-        save_conversation(conversation[:-1])
+        # remove last two lines as one conversation is two lines
+        save_conversation(conversation[:-2])
         break
     elif len(conversation) > 0:
         answer = ask_ChatGPT(question)
