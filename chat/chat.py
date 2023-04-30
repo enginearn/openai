@@ -27,9 +27,11 @@ def ask_ChatGPT(question: str) -> str:
 
 
 def create_save_path(ext="txt") -> str:
-    user_ext = input("Save as .csv or .txt? [csv/txt]: ")
-    if user_ext == "":
-        pass
+    print("If not saved, the conversation will be lost.")
+    user_ext = input("Save as .csv or .txt? [csv/txt/no(default: not saved)]: ").lower()
+    if user_ext in ["q", "exit", "quit", "bye", "no", ""]:
+        print("Bye!")
+        exit()
     elif user_ext in ["csv", "txt"]:
         ext = user_ext
     save_dir = "conversations"
@@ -48,7 +50,7 @@ def save_conversation(conversation: list) -> None:
     match ext:
         case ".csv":
             data = [conversation[i : i + 2] for i in range(0, len(conversation), 2)]
-            df = pd.DataFrame(data, columns=["text", "timestamp"])
+            df = pd.DataFrame(data, columns=["timestamp", "message"])
             df.to_csv(file + ext, index=False)
         case ".txt":
             with open(file + ext, "w") as f:
@@ -68,8 +70,8 @@ while True:
     if question == "":
         continue
 
-    conversation.append(f"You: {question}")
     conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    conversation.append(f"You: {question}")
 
     if question in ["q", "exit"]:
         # remove last two lines as one conversation is two lines
@@ -78,5 +80,5 @@ while True:
     elif len(conversation) > 0:
         answer = ask_ChatGPT(question)
         print(answer)
-        conversation.append(f"{answer}")
         conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        conversation.append(f"{answer}")
