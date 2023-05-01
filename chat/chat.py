@@ -17,7 +17,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 # 料金の概算を計算するための関数を定義する
 def calculate_cost(total_tokens) -> float:
     cost = total_tokens * 0.002  # 1トークンあたり0.002ドル
-    return cost # 1トークンあたり0.002ドル
+    return cost
 
 
 # ChatGPTを使って質問する関数を定義する
