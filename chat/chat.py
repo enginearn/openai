@@ -66,10 +66,10 @@ def save_conversation(conversation: list) -> None:
     file, ext = os.path.splitext(file)
     match ext:
         case ".csv":
-            # data = [conversation[i : i + 2] for i in range(0, len(conversation), 2)] # 2行を1行へ (timestamp, message)
+            # data = [conversation[i : i + 3] for i in range(0, len(conversation), 3)] # 3行を1行へ (timestamp, user, message)
             data = [
                 conversation[i : i + 7] for i in range(0, len(conversation), 7)
-            ]  # 7行を1行へ (timestamp, message, comp_tokens, prompt_tokens, total_tokens, cost)
+            ]  # 7行を1行へ (timestamp, user, message, comp_tokens, prompt_tokens, total_tokens, cost)
             columns = [
                 "timestamp",
                 "user",
@@ -91,37 +91,41 @@ def save_conversation(conversation: list) -> None:
     print(f"Conversation saved to {file + ext}.")
 
 
-# 会話開始
-print("Welcome to the chatbot. Type 'q' or 'exit' to quit.")
-conversation = []
-while True:
-    try:
-        question = input("user: ")
-        if question == "":
-            continue
-    except KeyboardInterrupt:
-        print("Bye!")
-        exit()
-
-    conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    conversation.extend(["user", question])
-    conversation.extend(["-", "-", "-", "-"])
-
-    if question in ["q", "exit"]:
-        # remove last 7 lines
-        save_conversation(conversation[:-7])
-        break
-    elif len(conversation) > 0:
-        results = ask_ChatGPT(question)
-        assistant = results[0].split(":")[0]
-        answer = results[0].split(":")[1]
-        comp_tokens = results[1]
-        prompt_tokens = results[2]
-        total_tokens = results[3]
-        cost = calculate_cost(total_tokens)
-
-        print(f"{assistant}: {answer}")
+def main():
+    # 会話開始
+    print("Welcome to the chatbot. Type 'q' or 'exit' to quit.")
+    conversation = []
+    while True:
+        try:
+            question = input("user: ")
+            if question == "":
+                continue
+        except KeyboardInterrupt:
+            print("Bye!")
+            exit()
 
         conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        conversation.extend([assistant, answer])
-        conversation.extend([comp_tokens, prompt_tokens, total_tokens, str(cost)])
+        conversation.extend(["user", question])
+        conversation.extend(["-", "-", "-", "-"])
+
+        if question in ["q", "exit"]:
+            # remove last 7 lines
+            save_conversation(conversation[:-7])
+            break
+        elif len(conversation) > 0:
+            results = ask_ChatGPT(question)
+            assistant = results[0].split(":")[0]
+            answer = results[0].split(":")[1]
+            comp_tokens = results[1]
+            prompt_tokens = results[2]
+            total_tokens = results[3]
+            cost = calculate_cost(total_tokens)
+
+            print(f"{assistant}: {answer}")
+
+            conversation.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            conversation.extend([assistant, answer])
+            conversation.extend([comp_tokens, prompt_tokens, total_tokens, str(cost)])
+
+if __name__ == "__main__":
+    main()
