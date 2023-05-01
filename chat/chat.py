@@ -127,5 +127,6 @@ def main():
             conversation.extend([assistant, answer])
             conversation.extend([comp_tokens, prompt_tokens, total_tokens, str(cost)])
 
+
 if __name__ == "__main__":
     main()
