@@ -17,7 +17,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 # 料金の概算を計算するための関数を定義する
 def calculate_cost(total_tokens) -> float:
     cost = total_tokens * 0.002  # 1トークンあたり0.002ドル
-    return cost
+    return round(cost, 3)
 
 
 # ChatGPTを使って質問する関数を定義する
@@ -66,10 +66,6 @@ def save_conversation(conversation: list) -> None:
     file, ext = os.path.splitext(file)
     match ext:
         case ".csv":
-            # data = [conversation[i : i + 3] for i in range(0, len(conversation), 3)] # 3行を1行へ (timestamp, user, message)
-            data = [
-                conversation[i : i + 7] for i in range(0, len(conversation), 7)
-            ]  # 7行を1行へ (timestamp, user, message, comp_tokens, prompt_tokens, total_tokens, cost)
             columns = [
                 "timestamp",
                 "user",
@@ -79,6 +75,11 @@ def save_conversation(conversation: list) -> None:
                 "total_tokens",
                 "cost",
             ]
+            cols = len(columns)
+            # data = [conversation[i : i + cols] for i in range(0, len(conversation), cols)] # 3行を1行へ (timestamp, user, message)
+            data = [
+                conversation[i : i + cols] for i in range(0, len(conversation), cols)
+            ]  # 7行を1行へ (timestamp, user, message, comp_tokens, prompt_tokens, total_tokens, cost)
             df = pd.DataFrame(data, columns=columns)
             df.to_csv(file + ext, index=False)
         case ".txt":
