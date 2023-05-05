@@ -13,6 +13,8 @@ $env:OPENAI_API_KEY="YOUR_API_KEY"
 ``` PowerShell
 openai --api-key ${OPENAI_API_KEY} api models.list
 openai -k ${OPENAI_API_KEY} api models.list
+# If you got an error, try this.
+openai api models.list
 ```
 
 ``` PowerShell
@@ -20,6 +22,41 @@ openai --api-key <OPENAI_API_KEY> api fine_tunes.create -t "[yourfilelocationher
 ```
 
 [Issue with OpenAI API key while using it in Windows](https://stackoverflow.com/questions/72644231/issue-with-openai-api-key-while-using-it-in-windows)
+
+- `curl`
+
+``` curl PowerShell
+$env:OPENAI_API_KEY="YOUR_API_KEY"
+curl https://api.openai.com/v1/models -H "Authorization: Bearer $env:OPENAI_API_KEY" | jq '.data[].id'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 43017  100 43017    0     0  73537      0 --:--:-- --:--:-- --:--:-- 73785
+"babbage"
+"davinci"
+"text-davinci-edit-001"
+"babbage-code-search-code"
+"text-similarity-babbage-001"
+"code-davinci-edit-001"
+"text-davinci-001"
+"ada"
+```
+
+- `PowerShell`
+
+``` PowerShell
+$headers = @{"Authorization" = "Bearer $env:OPENAI_API_KEY"}
+$response = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Get
+$response.data | ForEach-Object { $_.id }
+davinci
+text-davinci-edit-001
+babbage-code-search-code
+text-similarity-babbage-001
+code-davinci-edit-001
+text-davinci-001
+ada
+```
+
+[openai api-reference](https://platform.openai.com/docs/api-reference/models)
 
 ## Useful prompt?
 
