@@ -16,11 +16,18 @@ def calculate_cost(total_tokens) -> float:
 
 
 def give_a_role() -> str:
-    res = input("Something specify the role for assistant?[y/N]: ").lower()
-    if res in ["y", "yes"]:
-        role_text = input("Specify the role for assistant: ")
-    else:
-        role_text = ""
+    try:
+        res = input("Something specify the role for assistant?[y/N]: ").lower()
+        if res in ["y", "yes"]:
+            role_text = input("Specify the role for assistant: ")
+        elif res in ["q", "quit", "exit"]:
+            print("Bye!")
+            exit()
+        else:
+            role_text = ""
+    except KeyboardInterrupt:
+        print("Bye!")
+        exit()
     return role_text
 
 # ChatGPTを使って質問する関数を定義する
