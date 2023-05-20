@@ -47,7 +47,6 @@ def main() -> None:
         # Chat
         st.subheader("Chat")
         user_input = st.text_input("You", "")
-        # while True:
         try:
             user_input = user_input.strip()
             if user_input != "":
