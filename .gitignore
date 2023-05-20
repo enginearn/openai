@@ -3,6 +3,7 @@
 
 */conversations/
 openai-cookbook/
+*/**/.env
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
