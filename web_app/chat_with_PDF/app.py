@@ -20,14 +20,15 @@ def validate_api_key(api_key):
         st.session_state["api_key"] = api_key
         return True
 
+
 def setup_streamlit():
     st.set_page_config(
         page_title="Chat with PDF", layout="centered", initial_sidebar_state="auto"
     )
     st.header("Chat with PDF 🕸")
     st.write("This is a web app to chat with PDFs.")
-    api_key = st.text_input("Enter your OpenAI API Key", type='password')
-    if st.button('Submit'):
+    api_key = st.text_input("Enter your OpenAI API Key", type="password")
+    if st.button("Submit"):
         if validate_api_key(api_key):
             st.success("API key validated successfully!")
         else:
@@ -66,7 +67,9 @@ def chat(knowledge_base, user_input):
         if user_input != "":
             with st.spinner(text="In progress..."):
                 response = knowledge_base.similarity_search(user_input)
-                llm = OpenAI(openai_api_key=st.session_state["api_key"])  # Use the API key from the session state
+                llm = OpenAI(
+                    openai_api_key=st.session_state["api_key"]
+                )  # Use the API key from the session state
                 chain = load_qa_chain(llm, chain_type="stuff")
                 with get_openai_callback() as cb:
                     response = chain.run(
@@ -77,7 +80,7 @@ def chat(knowledge_base, user_input):
                         f"Total Tokens: {cb.total_tokens} Prompt Tokens: {cb.prompt_tokens} Completion Tokens: {cb.completion_tokens} Total Cost (USD): ${cb.total_cost:.5f}"
                     )
     except Exception as e:
-        st.error(e)# Display the error message in the Streamlit interface
+        st.error(e)  # Display the error message in the Streamlit interface
 
 
 def main() -> None:
