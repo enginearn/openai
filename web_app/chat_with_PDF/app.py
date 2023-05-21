@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from dotenv import load_dotenv
 import streamlit as st
 import pypdf
 
@@ -22,7 +21,6 @@ def validate_api_key(api_key):
         return True
 
 def setup_streamlit():
-    # load_dotenv()
     st.set_page_config(
         page_title="Chat with PDF", layout="centered", initial_sidebar_state="auto"
     )
